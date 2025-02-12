@@ -31,6 +31,10 @@
              class="btn btn-warning btn-sm">
             Edit
           </a>
+          <a th:href="@{/product/delete/{productId}(productId=${product.productId})}"
+             class="btn btn-danger btn-sm">
+            Delete
+          </a>
         </td>
       </tr>
       </tbody>
