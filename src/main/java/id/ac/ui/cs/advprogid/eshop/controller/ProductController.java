@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/product")
@@ -25,6 +26,10 @@ public class ProductController {
 
     @PostMapping("/create")
     public String createProductPost(@ModelAttribute Product product, Model model) {
+        // Jika productId belum di-set, generate ID baru
+        if (product.getProductId() == null || product.getProductId().isEmpty()) {
+            product.setProductId(UUID.randomUUID().toString());
+        }
         service.create(product);
         return "redirect:list";
     }
@@ -35,4 +40,21 @@ public class ProductController {
         model.addAttribute("products", allProducts);
         return "productList";
     }
+
+    // Menampilkan halaman edit untuk product tertentu berdasarkan id
+    @GetMapping("/edit/{productId}")
+    public String editProductPage(@PathVariable("productId") String productId, Model model) {
+        Product product = service.findById(productId);
+        // Pastikan product ditemukan atau tambahkan penanganan error yang sesuai
+        model.addAttribute("product", product);
+        return "editProduct";
+    }
+
+    // Memproses data yang diedit dan melakukan update product
+    @PostMapping("/edit")
+    public String editProductPost(@ModelAttribute Product product, Model model) {
+        service.update(product);
+        return "redirect:list";
+    }
+
 }
