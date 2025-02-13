@@ -65,4 +65,71 @@ class ProductRepositoryTest {
         assertEquals(product2.getProductId(), savedProduct.getProductId());
         assertFalse(productIterator.hasNext());
     }
+
+
+    // === Edit (Update) Product ===
+
+    @Test
+    void testUpdateProduct_Positive() {
+        // Arrange: Buat dan simpan sebuah produk
+        Product product = new Product();
+        product.setProductId("id1");
+        product.setProductName("Original Name");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        // Act: Update produk yang sudah ada dengan data baru
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("id1");
+        updatedProduct.setProductName("Updated Name");
+        updatedProduct.setProductQuantity(150);
+        Product result = productRepository.update(updatedProduct);
+
+        // Assert: Pastikan update berhasil dan data produk telah berubah
+        assertNotNull(result, "Hasil update tidak boleh null");
+        assertEquals("id1", result.getProductId(), "Product ID harus sama");
+        assertEquals("Updated Name", result.getProductName(), "Nama produk harus terupdate");
+        assertEquals(150, result.getProductQuantity(), "Kuantitas produk harus terupdate");
+    }
+
+    @Test
+    void testUpdateProduct_Negative() {
+        // Act: Coba update produk yang tidak ada di repository
+        Product nonExistingProduct = new Product();
+        nonExistingProduct.setProductId("non-existent");
+        nonExistingProduct.setProductName("Does Not Exist");
+        nonExistingProduct.setProductQuantity(0);
+        Product result = productRepository.update(nonExistingProduct);
+
+        // Assert: Karena produk tidak ada, seharusnya update mengembalikan null
+        assertNull(result, "Update produk non-existing harus mengembalikan null");
+    }
+
+    // === Delete Product ===
+
+    @Test
+    void testDeleteProduct_Positive() {
+        // Arrange: Buat dan simpan sebuah produk
+        Product product = new Product();
+        product.setProductId("id2");
+        product.setProductName("Product To Delete");
+        product.setProductQuantity(200);
+        productRepository.create(product);
+
+        // Act: Hapus produk yang sudah ada
+        boolean deleted = productRepository.delete("id2");
+
+        // Assert: Penghapusan harus berhasil, dan produk tidak ditemukan lagi
+        assertTrue(deleted, "Penghapusan produk harus berhasil");
+        assertNull(productRepository.findById("id2"), "Produk yang dihapus tidak boleh ditemukan");
+    }
+
+    @Test
+    void testDeleteProduct_Negative() {
+        // Act: Coba hapus produk dengan ID yang tidak ada
+        boolean deleted = productRepository.delete("non-existent");
+
+        // Assert: Karena produk tidak ada, penghapusan harus gagal (mengembalikan false)
+        assertFalse(deleted, "Penghapusan produk non-existing harus gagal");
+    }
 }
