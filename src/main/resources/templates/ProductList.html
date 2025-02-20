@@ -11,6 +11,11 @@
 <body>
 <div class="container my-2">
   <h2>Product List</h2>
+
+  <!-- Tombol untuk kembali ke halaman home -->
+  <a th:href="@{/}" class="btn btn-secondary btn-sm mb-3">Back to Home</a>
+
+  <!-- Tombol untuk membuat produk baru -->
   <a th:href="@{/product/create}" class="btn btn-primary btn-sm mb-3">Create Product</a>
 
   <!-- Menggunakan list-group untuk menampilkan produk -->
