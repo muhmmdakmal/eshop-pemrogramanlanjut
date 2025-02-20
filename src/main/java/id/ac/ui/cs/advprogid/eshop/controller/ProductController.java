@@ -27,7 +27,7 @@ public class ProductController {
     @PostMapping("/create")
     public String createProductPost(@ModelAttribute Product product, Model model) {
         // Jika productId belum di-set, generate ID baru
-        if (product.getProductId() == null || product.getProductId().isEmpty()) {
+        if (product.getProductId() == null) {
             product.setProductId(UUID.randomUUID().toString());
         }
         service.create(product);

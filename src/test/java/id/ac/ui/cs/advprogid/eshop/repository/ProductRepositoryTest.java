@@ -19,6 +19,7 @@ class ProductRepositoryTest {
     ProductRepository productRepository;
     @BeforeEach
     void setUp() {
+        productRepository = new ProductRepository();
     }
 
     @Test
@@ -132,4 +133,106 @@ class ProductRepositoryTest {
         // Assert: Karena produk tidak ada, penghapusan harus gagal (mengembalikan false)
         assertFalse(deleted, "Penghapusan produk non-existing harus gagal");
     }
+
+    @Test
+    void testFindById_Positive() {
+        // Arrange
+        Product product = new Product();
+        product.setProductId("id3");
+        product.setProductName("Product 3");
+        product.setProductQuantity(300);
+        productRepository.create(product);
+
+        // Act
+        Product found = productRepository.findById("id3");
+
+        // Assert
+        assertNotNull(found);
+        assertEquals("Product 3", found.getProductName());
+    }
+
+    @Test
+    void testFindById_NotFoundWhenEmpty() {
+        Product found = productRepository.findById("non-existent");
+        assertNull(found);
+    }
+
+    // Tambahan Test untuk findById: Kondisi repository tidak kosong, namun ID tidak ditemukan
+    @Test
+    void testFindById_NonMatchingWhenNotEmpty() {
+        // Arrange: Tambahkan satu produk dengan ID "p1"
+        Product product = new Product();
+        product.setProductId("p1");
+        product.setProductName("Product 1");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        // Act: Panggil findById dengan ID yang tidak ada ("p2")
+        Product found = productRepository.findById("p2");
+
+        // Assert: Harus mengembalikan null
+        assertNull(found);
+    }
+
+    // Tambahan Test untuk update: Menguji branch false di iterasi awal dan true di iterasi berikutnya
+    @Test
+    void testUpdateProduct_MultipleProducts() {
+        // Arrange: Tambahkan dua produk
+        Product product1 = new Product();
+        product1.setProductId("p1");
+        product1.setProductName("Product 1");
+        product1.setProductQuantity(100);
+        productRepository.create(product1);
+
+        Product product2 = new Product();
+        product2.setProductId("p2");
+        product2.setProductName("Product 2");
+        product2.setProductQuantity(50);
+        productRepository.create(product2);
+
+        // Act: Update produk dengan ID "p2"
+        Product updatedProduct2 = new Product();
+        updatedProduct2.setProductId("p2");
+        updatedProduct2.setProductName("Updated Product 2");
+        updatedProduct2.setProductQuantity(75);
+        Product result = productRepository.update(updatedProduct2);
+
+        // Assert:
+        // - Iterasi pertama (p1) harus gagal (false) pada pengecekan,
+        // - Iterasi kedua (p2) menemukan kecocokan dan mengembalikan produk yang diperbarui.
+        assertNotNull(result);
+        assertEquals("Updated Product 2", result.getProductName());
+
+        // Pastikan produk lain tidak berubah
+        Product unchanged = productRepository.findById("p1");
+        assertEquals("Product 1", unchanged.getProductName());
+    }
+
+    // Tambahan Test untuk delete: Menguji kondisi false pada iterasi pertama sebelum menemukan produk yang akan dihapus
+    @Test
+    void testDeleteProduct_MultipleProducts() {
+        // Arrange: Tambahkan dua produk
+        Product product1 = new Product();
+        product1.setProductId("p1");
+        product1.setProductName("Product 1");
+        product1.setProductQuantity(100);
+        productRepository.create(product1);
+
+        Product product2 = new Product();
+        product2.setProductId("p2");
+        product2.setProductName("Product 2");
+        product2.setProductQuantity(50);
+        productRepository.create(product2);
+
+        // Act: Hapus produk dengan ID "p2"
+        boolean deleted = productRepository.delete("p2");
+
+        // Assert:
+        // - Pada iterasi pertama (p1), kondisi false (tidak cocok),
+        // - Pada iterasi kedua (p2), kondisi true dan produk dihapus.
+        assertTrue(deleted);
+        assertNotNull(productRepository.findById("p1"));
+        assertNull(productRepository.findById("p2"));
+    }
+
 }
