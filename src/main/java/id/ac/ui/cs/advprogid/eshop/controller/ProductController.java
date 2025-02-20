@@ -21,13 +21,13 @@ public class ProductController {
     public String createProductPage(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
-        return "createProduct";
+        return "CreateProduct";
     }
 
     @PostMapping("/create")
     public String createProductPost(@ModelAttribute Product product, Model model) {
         // Jika productId belum di-set, generate ID baru
-        if (product.getProductId() == null || product.getProductId().isEmpty()) {
+        if (product.getProductId() == null) {
             product.setProductId(UUID.randomUUID().toString());
         }
         service.create(product);
@@ -38,7 +38,7 @@ public class ProductController {
     public String productListPage(Model model) {
         List<Product> allProducts = service.findAll();
         model.addAttribute("products", allProducts);
-        return "productList";
+        return "ProductList";
     }
 
     // Menampilkan halaman edit untuk product tertentu berdasarkan id
@@ -47,7 +47,7 @@ public class ProductController {
         Product product = service.findById(productId);
         // Pastikan product ditemukan atau tambahkan penanganan error yang sesuai
         model.addAttribute("product", product);
-        return "editProduct";
+        return "EditProduct";
     }
 
     // Memproses data yang diedit dan melakukan update product
