@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "home"; // Mengarahkan ke view "home.html"
+        return "Home"; // Mengarahkan ke view "home.html"
     }
 }
