@@ -79,6 +79,7 @@ deployment.
 
 <details>
    <summary> Tutorial 3 </summary>
+Reflection
 
 1. Explain what principles you apply to your project!
    - Single Responsibility Principle (SRP):
