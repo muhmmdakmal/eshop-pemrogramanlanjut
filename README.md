@@ -73,12 +73,58 @@ berkelanjutan. Secara keseluruhan, repository saya telah mengadopsi prinsip CI/C
 untuk perbaikan dan penambahan fitur seperti integrasi testing lebih komprehensif atau rollback otomatis jika terjadi kegagalan 
 deployment.
 
+</details>
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+<details>
+   <summary> Tutorial 3 </summary>
+
+1. Explain what principles you apply to your project!
+   - Single Responsibility Principle (SRP):
+   
+   Setiap kelas atau modul memiliki satu tanggung jawab utama. Misalnya, kelas CarRepository hanya bertanggung jawab untuk operasi CRUD (create, read, update, delete) pada entitas Car dan tidak mencampur logika lain. Hal yang sama diterapkan pada ProductRepository, sehingga setiap komponen hanya menangani satu aspek dari aplikasi.
+
+   - Open/Closed Principle (OCP):
+   
+   Kelas atau modul harus terbuka untuk ekstensi namun tertutup untuk modifikasi. Di proyek ini, misalnya, kami telah membuat interface dasar (seperti ICarRepository dan IProductRepository) dan mengembangkan kelas ekstensi (seperti CarRepositoryExtendedImpl dan ProductRepositoryExtendedImpl) untuk menambahkan fitur baru (misalnya, pencarian berdasarkan atribut) tanpa mengubah kode dasar yang sudah teruji.
+   
+   - Dependency Inversion Principle (DIP):
+   
+   Modul tingkat tinggi (seperti service dan controller) tidak bergantung pada modul tingkat rendah (seperti repository konkrit), melainkan pada abstraksi (interface). Contohnya, kelas CarServiceImpl dan ProductServiceImpl hanya bergantung pada interface (ICarRepository dan IProductRepository) sehingga memungkinkan fleksibilitas untuk mengganti implementasi repository jika diperlukan.
 
 
+2.  Explain the advantages of applying SOLID principles to your project with examples.
+   - Maintainability (Kemudahan Pemeliharaan):
+     
+Dengan SRP, setiap kelas memiliki satu tanggung jawab. Contohnya, jika ada perubahan pada cara penyimpanan data Car, hanya CarRepository yang perlu diperbaiki, tanpa mempengaruhi kelas lain. Ini membuat perbaikan bug dan pemeliharaan menjadi lebih mudah dan terisolasi.
 
+   - Extensibility (Kemudahan Ekstensi Fitur):
+   
+Penerapan OCP memungkinkan Anda menambahkan fungsionalitas baru tanpa mengubah kode yang sudah ada. Misalnya, jika di kemudian hari Anda ingin menambahkan fitur pencarian mobil berdasarkan warna, Anda cukup membuat interface ekstensi ExtendedCarRepository dan mengimplementasikannya di kelas baru (CarRepositoryExtendedImpl). Kode dasar CarRepository tidak diubah, sehingga risiko terjadinya bug pada fungsionalitas lama menjadi minim.
+   
+   - Testability (Kemudahan Pengujian):
+   
+Dengan DIP, service dan controller tidak bergantung langsung pada implementasi konkrit repository. Karena mereka hanya bergantung pada abstraksi (interface), Anda bisa dengan mudah membuat mock atau stub untuk melakukan unit testing. Misalnya, CarServiceImpl dapat diuji dengan memberikan implementasi palsu dari ICarRepository, sehingga pengujian dapat dilakukan secara terisolasi tanpa perlu bergantung pada data nyata.
+   
+   - Flexibility (Fleksibilitas Perubahan):
+   
+Karena komponen-komponen bergantung pada abstraksi, Anda dapat dengan mudah mengganti implementasi detail (misalnya, beralih ke database yang berbeda atau menambah fitur baru) tanpa harus merombak kode di level yang lebih tinggi. Ini membuat sistem lebih adaptif terhadap perubahan kebutuhan bisnis.
 
+3. Explain the disadvantages of not applying SOLID principles to your project with examples.
+   - Keterikatan Kode (Tight Coupling):
+     
+   Tanpa DIP, modul tingkat tinggi akan bergantung langsung pada implementasi konkrit. Misalnya, jika CarService langsung menggunakan CarRepository tanpa abstraksi, maka setiap perubahan pada CarRepository (misalnya, perubahan logika atau metode baru) bisa langsung mempengaruhi CarService, yang menyebabkan sulitnya melakukan perubahan tanpa risiko merusak fungsionalitas lain.
 
-
-
-
+   - Kode yang Sulit Dipelihara (Hard to Maintain):
+   
+   Tanpa SRP, satu kelas mungkin menangani banyak tanggung jawab. Hal ini menyebabkan kelas menjadi besar, kompleks, dan sulit untuk dimengerti. Contohnya, jika ProductRepository juga menangani validasi bisnis atau logging, setiap perubahan pada satu aspek bisa menyebabkan efek samping yang tidak diinginkan pada aspek lain, sehingga debugging menjadi lebih rumit.
+   
+   - Sulit untuk Ekstensi (Lack of Extensibility):
+   
+   Tanpa menerapkan OCP, menambahkan fitur baru seringkali mengharuskan modifikasi pada kode yang sudah ada. Misalnya, jika ingin menambahkan metode pencarian baru pada CarRepository yang belum dirancang untuk ekstensi, Anda harus mengubah kelas yang sudah ada. Hal ini meningkatkan kemungkinan terjadinya bug dan membuat sistem menjadi kurang fleksibel terhadap perubahan kebutuhan.
+   
+   - Pengujian yang Rumit (Difficult to Test):
+   
+   Tanpa abstraksi yang disediakan oleh DIP, unit testing menjadi lebih sulit. Komponen yang saling terkait secara langsung (tight coupling) membuat sulit untuk mengisolasi bagian tertentu dari sistem dalam pengujian. Akibatnya, penulisan unit test menjadi lebih kompleks dan kurang efektif dalam menemukan bug.
 </details>
