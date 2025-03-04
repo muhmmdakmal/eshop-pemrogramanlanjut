@@ -23,14 +23,8 @@ public class PaymentServiceImpl implements PaymentService {
         if ("Cash on Delivery".equals(method)) {
             String voucherCode = paymentData.get("voucherCode");
             if (voucherCode != null) {
-                if (voucherCode.length() == 16 && voucherCode.startsWith("ESHOP")) {
-                    // Ambil semua digit dari voucher code
-                    String digits = voucherCode.replaceAll("[^0-9]", "");
-                    if (digits.length() == 8) {
-                        status = "SUCCESS";
-                    } else {
-                        status = "REJECTED";
-                    }
+                if (isValidVoucherCode(voucherCode)) {
+                    status = "SUCCESS";
                 } else {
                     status = "REJECTED";
                 }
@@ -45,6 +39,15 @@ public class PaymentServiceImpl implements PaymentService {
                 .order(order)
                 .build();
         return paymentRepository.save(payment);
+    }
+
+    private boolean isValidVoucherCode(String voucherCode) {
+        if (voucherCode.length() != 16 && !voucherCode.startsWith("ESHOP")) {
+            return false;
+        }
+        // Ambil semua digit dari voucher code
+        String digits = voucherCode.replaceAll("[^0-9]", "");
+        return digits.length() == 8;
     }
 
     @Override
