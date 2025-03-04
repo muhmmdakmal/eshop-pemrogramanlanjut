@@ -18,11 +18,30 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
+        String status = "PENDING"; // Default status
+
+        if ("Cash on Delivery".equals(method)) {
+            String voucherCode = paymentData.get("voucherCode");
+            if (voucherCode != null) {
+                if (voucherCode.length() == 16 && voucherCode.startsWith("ESHOP")) {
+                    // Ambil semua digit dari voucher code
+                    String digits = voucherCode.replaceAll("[^0-9]", "");
+                    if (digits.length() == 8) {
+                        status = "SUCCESS";
+                    } else {
+                        status = "REJECTED";
+                    }
+                } else {
+                    status = "REJECTED";
+                }
+            }
+        }
+
         Payment payment = Payment.builder()
                 .id(UUID.randomUUID().toString())
                 .method(method)
                 .paymentData(paymentData)
-                .status("PENDING")
+                .status(status)
                 .order(order)
                 .build();
         return paymentRepository.save(payment);
