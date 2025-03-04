@@ -12,7 +12,15 @@ public class PaymentRepository {
     private List<Payment> payments = new ArrayList<>();
 
     public Payment save(Payment payment) {
-        return null;
+        // Jika payment dengan ID yang sama sudah ada, update; jika tidak, tambahkan baru.
+        for (int i = 0; i < payments.size(); i++) {
+            if (payments.get(i).getId().equals(payment.getId())) {
+                payments.set(i, payment);
+                return payment;
+            }
+        }
+        payments.add(payment);
+        return payment;
     }
 
     public Payment findById(String paymentId) {
@@ -25,6 +33,6 @@ public class PaymentRepository {
     }
 
     public List<Payment> findAll() {
-        return null;
+        return new ArrayList<>(payments);
     }
 }
