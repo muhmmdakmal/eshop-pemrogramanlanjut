@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PaymentTest {
+
     @Test
     void testPaymentBuilder() {
         // Given
@@ -17,8 +19,14 @@ public class PaymentTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("transactionId", "TXN001");
 
-        // Misalnya, buat Order sederhana dengan list produk kosong (sesuaikan dengan implementasi Order Anda)
-        Order order = new Order("order-001", new ArrayList<>(), 1708560000L, "Test Author");
+        // Buat Order sederhana dengan produk tidak kosong
+        List<Product> products = new ArrayList<>();
+        Product dummyProduct = new Product();
+        dummyProduct.setProductId("prod-001");
+        dummyProduct.setProductName("Dummy Product");
+        dummyProduct.setProductQuantity(1);
+        products.add(dummyProduct);
+        Order order = new Order("order-001", products, 1708560000L, "Test Author");
 
         // When
         Payment payment = Payment.builder()
@@ -40,14 +48,20 @@ public class PaymentTest {
     @Test
     void testPaymentSetters() {
         // Given
+        List<Product> products = new ArrayList<>();
+        Product dummyProduct = new Product();
+        dummyProduct.setProductId("prod-002");
+        dummyProduct.setProductName("Dummy Product 2");
+        dummyProduct.setProductQuantity(2);
+        products.add(dummyProduct);
+        Order order = new Order("order-002", products, 1708560000L, "Another Author");
+
         Payment payment = Payment.builder().build();
         String id = "321e4567-e89b-12d3-a456-426614174000";
         String method = "PayPal";
         String status = "SUCCESS";
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("info", "Paid successfully");
-
-        Order order = new Order("order-002", new ArrayList<>(), 1708560000L, "Another Author");
 
         // When
         payment.setId(id);
