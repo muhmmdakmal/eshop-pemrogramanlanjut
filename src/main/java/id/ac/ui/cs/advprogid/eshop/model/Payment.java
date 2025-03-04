@@ -11,13 +11,12 @@ import java.util.Map;
 @Setter
 @Builder
 public class Payment {
-    private String id;                   // UUID
-    private String method;               // Nama sub-fiturnya
-    private String status;               // Misalnya: PENDING, SUCCESS, REJECTED, dll.
-    private Map<String, String> paymentData; // Data sub-fiturnya
-    private Order order;                 // Order terkait
+    private String id;
+    private String method;
+    private String status;
+    private Map<String, String> paymentData;
+    private Order order;
 
-    // Custom setter untuk status dengan validasi menggunakan enum PaymentStatus
     public void setStatus(String status) {
         if (PaymentStatus.contains(status)) {
             this.status = status;
