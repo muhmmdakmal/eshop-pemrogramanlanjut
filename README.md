@@ -129,3 +129,23 @@ Karena komponen-komponen bergantung pada abstraksi, Anda dapat dengan mudah meng
    
    Tanpa abstraksi yang disediakan oleh DIP, unit testing menjadi lebih sulit. Komponen yang saling terkait secara langsung (tight coupling) membuat sulit untuk mengisolasi bagian tertentu dari sistem dalam pengujian. Akibatnya, penulisan unit test menjadi lebih kompleks dan kurang efektif dalam menemukan bug.
 </details>
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<details>
+   <summary> Tutorial 4 </summary>
+
+Reflection
+1. Secara umum, TDD membantu saya menulis kode yang lebih terstruktur karena saya memulai dari kebutuhan fungsional (test) sebelum menulis implementasi. Namun, saya menyadari bahwa dalam praktiknya, ada beberapa hal yang bisa ditingkatkan:
+
+   - Mendefinisikan spesifikasi dengan lebih rinci: Kadang test saya terlalu umum, sehingga ketika implementasi berubah, saya harus menulis ulang banyak test. Di kesempatan berikutnya, saya perlu mendeskripsikan perilaku yang diharapkan secara lebih jelas sebelum menulis test.
+   - Membuat test yang benar-benar mewakili kebutuhan bisnis: Terkadang saya menulis test yang sifatnya terlalu teknis, bukan berdasarkan skenario penggunaan nyata. Saya akan fokus pada skenario yang benar-benar mencerminkan workflow pengguna.
+   - Menjaga siklus TDD tetap pendek: Saya masih sering menulis banyak kode sebelum kembali ke test. Berikutnya, saya berusaha menjaga siklus “red-green-refactor” lebih singkat agar feedback loop menjadi lebih cepat.
+
+2. Prinsip F.I.R.S.T. mencakup:
+
+   - Fast (Cepat): Test harus dijalankan dalam hitungan detik. Pengujian saya umumnya cepat, tetapi terkadang menunggu inisialisasi database atau konteks Spring. Mungkin perlu memisahkan unit test murni dari integrasi test agar lebih cepat.
+   - Independent (Mandiri): Setiap test tidak saling bergantung. Sebagian besar test saya sudah independen, namun ada beberapa kasus di mana test berbagi data global. Saya akan memperbaikinya dengan setup terpisah atau mocking.
+   - Repeatable (Dapat diulang): Test harus konsisten di berbagai lingkungan. Selama ini relatif berhasil, tetapi perlu memastikan test tidak bergantung pada konfigurasi lokal tertentu.
+   - Self-validating (Self-checking): Test langsung memberitahu apakah pass/fail tanpa perlu dicek manual. Ini sudah saya terapkan dengan assertion yang jelas.
+   - Timely (Tepat waktu): Test sebaiknya ditulis sebelum atau bersamaan dengan kode (TDD). Saya kadang menulis test setelah implementasi. Saya perlu lebih disiplin mengikuti TDD agar test benar-benar menjadi acuan desain.
+</details>
