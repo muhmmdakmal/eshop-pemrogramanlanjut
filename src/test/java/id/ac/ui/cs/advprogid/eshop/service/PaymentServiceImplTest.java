@@ -32,7 +32,6 @@ class PaymentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        // Siapkan dummy products (tidak boleh kosong)
         dummyProducts = new ArrayList<>();
         Product product = new Product();
         product.setProductId("prod-001");
@@ -40,24 +39,19 @@ class PaymentServiceImplTest {
         product.setProductQuantity(1);
         dummyProducts.add(product);
 
-        // Buat dummy order dengan produk tidak kosong
         dummyOrder = new Order("order-001", dummyProducts, 1708560000L, "Test Author");
 
-        // Siapkan dummy paymentData
         paymentData = new HashMap<>();
         paymentData.put("transactionId", "txn-001");
     }
 
     @Test
     void testAddPayment() {
-        // Stub repository.save untuk mengembalikan argumen yang sama
         when(paymentRepository.save(any(Payment.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         Payment result = paymentService.addPayment(dummyOrder, "CreditCard", paymentData);
 
-        // Assert
         assertNotNull(result);
         assertNotNull(result.getId());
         assertEquals("CreditCard", result.getMethod());
@@ -70,7 +64,6 @@ class PaymentServiceImplTest {
 
     @Test
     void testSetStatusSuccess() {
-        // Arrange: Buat dummy payment
         Payment payment = Payment.builder()
                 .id("payment-001")
                 .method("CreditCard")
@@ -78,16 +71,13 @@ class PaymentServiceImplTest {
                 .paymentData(paymentData)
                 .order(dummyOrder)
                 .build();
-        // Pastikan order status awal adalah WAITING_PAYMENT
         dummyOrder.setStatus("WAITING_PAYMENT");
 
         when(paymentRepository.save(any(Payment.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act: Set status menjadi SUCCESS
         Payment result = paymentService.setStatus(payment, "SUCCESS");
 
-        // Assert: Payment status harus SUCCESS, dan order status juga diubah ke SUCCESS
         assertEquals("SUCCESS", result.getStatus());
         assertEquals("SUCCESS", result.getOrder().getStatus());
 
@@ -96,7 +86,6 @@ class PaymentServiceImplTest {
 
     @Test
     void testSetStatusRejected() {
-        // Arrange: Buat dummy payment
         Payment payment = Payment.builder()
                 .id("payment-002")
                 .method("PayPal")
@@ -109,10 +98,8 @@ class PaymentServiceImplTest {
         when(paymentRepository.save(any(Payment.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act: Set status menjadi REJECTED
         Payment result = paymentService.setStatus(payment, "REJECTED");
 
-        // Assert: Payment status harus REJECTED, dan order status diubah ke FAILED
         assertEquals("REJECTED", result.getStatus());
         assertEquals("FAILED", result.getOrder().getStatus());
 
@@ -121,7 +108,6 @@ class PaymentServiceImplTest {
 
     @Test
     void testGetPayment() {
-        // Arrange: Buat dummy payment dan stub repository.findById
         Payment payment = Payment.builder()
                 .id("payment-003")
                 .method("DebitCard")
@@ -132,10 +118,8 @@ class PaymentServiceImplTest {
 
         when(paymentRepository.findById("payment-003")).thenReturn(payment);
 
-        // Act
         Payment result = paymentService.getPayment("payment-003");
 
-        // Assert
         assertNotNull(result);
         assertEquals("payment-003", result.getId());
         verify(paymentRepository, times(1)).findById("payment-003");
@@ -143,7 +127,6 @@ class PaymentServiceImplTest {
 
     @Test
     void testGetAllPayments() {
-        // Arrange: Buat dua dummy payment dan stub repository.findAll
         Payment payment1 = Payment.builder()
                 .id("payment-004")
                 .method("CreditCard")
@@ -162,10 +145,8 @@ class PaymentServiceImplTest {
         List<Payment> paymentList = Arrays.asList(payment1, payment2);
         when(paymentRepository.findAll()).thenReturn(paymentList);
 
-        // Act
         List<Payment> results = paymentService.getAllPayments();
 
-        // Assert
         assertNotNull(results);
         assertEquals(2, results.size());
         verify(paymentRepository, times(1)).findAll();

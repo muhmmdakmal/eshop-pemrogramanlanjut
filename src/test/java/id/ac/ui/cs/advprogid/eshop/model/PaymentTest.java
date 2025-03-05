@@ -12,14 +12,12 @@ public class PaymentTest {
 
     @Test
     void testPaymentBuilder() {
-        // Given
         String id = "123e4567-e89b-12d3-a456-426614174000";
         String method = "CreditCard";
         String status = "PENDING";
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("transactionId", "TXN001");
 
-        // Buat Order sederhana dengan produk tidak kosong
         List<Product> products = new ArrayList<>();
         Product dummyProduct = new Product();
         dummyProduct.setProductId("prod-001");
@@ -28,7 +26,6 @@ public class PaymentTest {
         products.add(dummyProduct);
         Order order = new Order("order-001", products, 1708560000L, "Test Author");
 
-        // When
         Payment payment = Payment.builder()
                 .id(id)
                 .method(method)
@@ -37,7 +34,6 @@ public class PaymentTest {
                 .order(order)
                 .build();
 
-        // Then
         assertEquals(id, payment.getId());
         assertEquals(method, payment.getMethod());
         assertEquals(status, payment.getStatus());
@@ -47,7 +43,6 @@ public class PaymentTest {
 
     @Test
     void testPaymentSetters() {
-        // Given
         List<Product> products = new ArrayList<>();
         Product dummyProduct = new Product();
         dummyProduct.setProductId("prod-002");
@@ -63,14 +58,12 @@ public class PaymentTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("info", "Paid successfully");
 
-        // When
         payment.setId(id);
         payment.setMethod(method);
         payment.setStatus(status);
         payment.setPaymentData(paymentData);
         payment.setOrder(order);
 
-        // Then
         assertEquals(id, payment.getId());
         assertEquals(method, payment.getMethod());
         assertEquals(status, payment.getStatus());

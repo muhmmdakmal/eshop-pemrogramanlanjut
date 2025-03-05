@@ -37,7 +37,6 @@ public class OrderServiceImplTest {
         product1.setProductQuantity(2);
         products.add(product1);
 
-        // Siapkan beberapa order dummy
         orders = new ArrayList<>();
         Order order1 = new Order(
                 "13652556-012a-4c07-b546-5eb139d679b",

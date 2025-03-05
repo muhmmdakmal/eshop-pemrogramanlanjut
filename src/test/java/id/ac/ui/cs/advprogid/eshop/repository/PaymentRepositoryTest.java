@@ -24,7 +24,6 @@ public class PaymentRepositoryTest {
     void setUp() {
         paymentRepository = new PaymentRepository();
 
-        // Siapkan list produk dummy untuk Order
         List<Product> products = new ArrayList<>();
         Product dummyProduct = new Product();
         dummyProduct.setProductId("dummy-001");
@@ -32,10 +31,8 @@ public class PaymentRepositoryTest {
         dummyProduct.setProductQuantity(1);
         products.add(dummyProduct);
 
-        // Buat Order dummy dengan produk tidak kosong
         dummyOrder = new Order("order-001", products, 1708560000L, "Test Author");
 
-        // Buat dua Payment dummy
         Map<String, String> paymentData1 = new HashMap<>();
         paymentData1.put("transactionId", "txn-001");
 
@@ -72,9 +69,8 @@ public class PaymentRepositoryTest {
 
     @Test
     void testSaveUpdatePayment() {
-        // Simpan payment1
         paymentRepository.save(payment1);
-        // Buat Payment baru dengan ID yang sama, namun method dan paymentData berbeda
+
         Map<String, String> updatedData = new HashMap<>();
         updatedData.put("transactionId", "txn-001-updated");
 

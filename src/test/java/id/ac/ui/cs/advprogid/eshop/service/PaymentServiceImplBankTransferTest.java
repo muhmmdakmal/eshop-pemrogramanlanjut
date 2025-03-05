@@ -29,7 +29,6 @@ class PaymentServiceImplBankTransferTest {
 
     @BeforeEach
     void setUp() {
-        // Buat dummy order dengan setidaknya satu produk agar tidak error
         List<Product> products = new ArrayList<>();
         Product product = new Product();
         product.setProductId("prod-001");
@@ -42,7 +41,6 @@ class PaymentServiceImplBankTransferTest {
 
     @Test
     void testAddPaymentBankTransferWithValidData() {
-        // Given: paymentData dengan bankName dan referenceCode valid
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("bankName", "Bank ABC");
         paymentData.put("referenceCode", "REF123456");
@@ -50,10 +48,8 @@ class PaymentServiceImplBankTransferTest {
         when(paymentRepository.save(any(Payment.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // When
         Payment payment = paymentService.addPayment(dummyOrder, "Bank Transfer", paymentData);
 
-        // Then: Karena data lengkap, status tetap default "PENDING"
         assertEquals("PENDING", payment.getStatus());
         assertEquals("Bank Transfer", payment.getMethod());
         assertEquals(paymentData, payment.getPaymentData());
@@ -61,7 +57,6 @@ class PaymentServiceImplBankTransferTest {
 
     @Test
     void testAddPaymentBankTransferWithEmptyBankName() {
-        // Given: bankName kosong, referenceCode valid
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("bankName", "");
         paymentData.put("referenceCode", "REF123456");
@@ -69,16 +64,13 @@ class PaymentServiceImplBankTransferTest {
         when(paymentRepository.save(any(Payment.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // When
         Payment payment = paymentService.addPayment(dummyOrder, "Bank Transfer", paymentData);
 
-        // Then: Karena bankName kosong, status harus REJECTED
         assertEquals("REJECTED", payment.getStatus());
     }
 
     @Test
     void testAddPaymentBankTransferWithNullReferenceCode() {
-        // Given: bankName valid, referenceCode null
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("bankName", "Bank XYZ");
         paymentData.put("referenceCode", null);
@@ -86,26 +78,21 @@ class PaymentServiceImplBankTransferTest {
         when(paymentRepository.save(any(Payment.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // When
         Payment payment = paymentService.addPayment(dummyOrder, "Bank Transfer", paymentData);
 
-        // Then: Karena referenceCode null, status harus REJECTED
         assertEquals("REJECTED", payment.getStatus());
     }
 
     @Test
     void testAddPaymentBankTransferWithMissingReferenceCode() {
-        // Given: bankName valid, tapi referenceCode tidak ada
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("bankName", "Bank 123");
 
         when(paymentRepository.save(any(Payment.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        // When
         Payment payment = paymentService.addPayment(dummyOrder, "Bank Transfer", paymentData);
 
-        // Then: Karena referenceCode tidak ada, status harus REJECTED
         assertEquals("REJECTED", payment.getStatus());
     }
 }
