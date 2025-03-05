@@ -18,15 +18,32 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
-        String status = "PENDING"; // Default status
+        String status = "PENDING"; // Status default
 
         if ("Cash on Delivery".equals(method)) {
+            // 1) Cek apakah ada voucher code
             String voucherCode = paymentData.get("voucherCode");
             if (voucherCode != null) {
+                // Sub-feature voucher code
                 if (isValidVoucherCode(voucherCode)) {
                     status = "SUCCESS";
                 } else {
                     status = "REJECTED";
+                }
+            }
+            else {
+                boolean hasAddress = paymentData.containsKey("address");
+                boolean hasFee = paymentData.containsKey("deliveryFee");
+
+                if (hasAddress || hasFee) {
+                    if (!hasAddress || !hasFee) {
+                        // Salah satu kunci tidak ada
+                        return null;
+                    } else {
+                        // Keduanya ada, cek nilainya
+                        return null;
+                        }
+                    }
                 }
             }
         }
@@ -38,14 +55,16 @@ public class PaymentServiceImpl implements PaymentService {
                 .status(status)
                 .order(order)
                 .build();
+
         return paymentRepository.save(payment);
     }
 
     private boolean isValidVoucherCode(String voucherCode) {
-        if (voucherCode.length() != 16 && !voucherCode.startsWith("ESHOP")) {
+        // Harus 16 karakter DAN diawali "ESHOP"
+        if (voucherCode.length() != 16 || !voucherCode.startsWith("ESHOP")) {
             return false;
         }
-        // Ambil semua digit dari voucher code
+        // Hitung semua digit di voucher code
         String digits = voucherCode.replaceAll("[^0-9]", "");
         return digits.length() == 8;
     }
@@ -71,3 +90,4 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.findAll();
     }
 }
+
