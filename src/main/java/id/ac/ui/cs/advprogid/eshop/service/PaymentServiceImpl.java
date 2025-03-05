@@ -53,7 +53,13 @@ public class PaymentServiceImpl implements PaymentService {
         }
         else if ("Bank Transfer".equals(method)) {
             // Sub-feature Bank Transfer:
-            return null;
+            String bankName = paymentData.get("bankName");
+            String referenceCode = paymentData.get("referenceCode");
+            // Jika salah satu key tidak ada atau nilainya kosong => REJECTED
+            if (bankName == null || bankName.trim().isEmpty() ||
+                    referenceCode == null || referenceCode.trim().isEmpty()) {
+                status = "REJECTED";
+            }
         }
 
         Payment payment = Payment.builder()
