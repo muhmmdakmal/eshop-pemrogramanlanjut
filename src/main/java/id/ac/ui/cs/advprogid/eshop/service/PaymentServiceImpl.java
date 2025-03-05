@@ -38,10 +38,14 @@ public class PaymentServiceImpl implements PaymentService {
                 if (hasAddress || hasFee) {
                     if (!hasAddress || !hasFee) {
                         // Salah satu kunci tidak ada
-                        return null;
+                        status = "REJECTED";
                     } else {
                         // Keduanya ada, cek nilainya
-                        return null;
+                        String address = paymentData.get("address");
+                        String fee = paymentData.get("deliveryFee");
+                        if (address == null || address.trim().isEmpty() ||
+                                fee == null || fee.trim().isEmpty()) {
+                            status = "REJECTED";
                         }
                     }
                 }
