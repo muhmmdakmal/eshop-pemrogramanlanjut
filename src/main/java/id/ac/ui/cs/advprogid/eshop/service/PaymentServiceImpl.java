@@ -51,6 +51,10 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
         }
+        else if ("Bank Transfer".equals(method)) {
+            // Sub-feature Bank Transfer:
+            return null;
+        }
 
         Payment payment = Payment.builder()
                 .id(UUID.randomUUID().toString())
